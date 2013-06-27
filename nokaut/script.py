@@ -1,10 +1,13 @@
 from lib import nokaut_api
-import getopt
+from lib import PusteError
 import sys
 
 def main():
-	try:
-		return nokaut_api(sys.argv[2],sys.argv[3])
-	except IndexError:
-		print "Za malo argumentow"
+	if (len(sys.argv)==4):
+		try:
+			print nokaut_api(sys.argv[2],sys.argv[3])
+		except PusteError as e:
+			print e
+	else:
+			return "Podaj 3 argumenty"
 

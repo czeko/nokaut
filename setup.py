@@ -6,11 +6,7 @@ setup (
 	author='Malwina Nowakowska',
 	author_email = 'malwina.nowakowska@stxnext.pl',
 	packages=find_packages(),
-
-	#packages=['tests','lib'],
-	#scripts=['lib/nokaut.py', 'lib/funkcja.py'],
-	#script_name='nokaut',
-	#py_modules=['nokaut'],
+	test_suite="nokaut.tests",
 	entry_points="""\
 		[console_scripts]
 		nokaut=nokaut.script:main
