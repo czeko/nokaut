@@ -1,12 +1,14 @@
 #-*- coding: utf-8 -*-
 import mock
 import unittest
-import sys
-from nokaut.lib import nokaut_api
+from nokaut.lib import nokaut__api
+from nokaut.script import main
+from nokaut.lib import PusteError
+from nokaut.lib import urllib2
+import urlparse
 
-from nokaut.lib import urllib
 
-EXAMPLE_RESPONSE = """\
+EXAMPLE_RESPONSE = '''\
 <?xml version="1.0" encoding="UTF-8"?>
 <rsp stat="ok">
     <items>
@@ -156,20 +158,18 @@ EXAMPLE_RESPONSE = """\
         </item>
     </items>
     <total>9</total>
-</rsp>"""
+</rsp>'''
 
 
 class MyTest(unittest.TestCase):
 
-
-    @mock.patch('nokaut.lib.urllib.urlopen')
-    def test_czy_wyjscie(self, mmock):
-        #import ipdb; ipdb.set_trace()
+    @mock.patch('nokaut.lib.urllib2.urlopen')
+    def test__czy__wyjscie(self, mmock):
         stream = mock.MagicMock()
         mmock.return_value = stream
         stream.read.return_value = EXAMPLE_RESPONSE
         self.assertEqual(
-            nokaut_api(
+            nokaut__api(
                 'a8839b1180ea00fa1cf7c6b74ca01bb5', 'canon450d'
             ),
             (
@@ -179,7 +179,37 @@ class MyTest(unittest.TestCase):
                 'http://www.nokaut.pl/futeraly-fotograficzne/easycover-na-aparat-canon-450-500d.html'
             )
         )
-    
-if __name__=="__main__":
-  unittest.main()
 
+    def test__ilosc__arg(self):
+        self.assertEqual(main(), 'Podaj 3 argumenty')
+
+    def test__czy__nie__ma(self):
+        self.assertRaises(
+            PusteError,
+            nokaut__api,
+            'a8839b1180ea00fa1cf7c6b74ca01bb5',
+            'mamamamamamama'
+        )
+
+    @mock.patch('nokaut.lib.urllib2.urlopen')
+    def test__czy__dobry__url(self, mmock):
+        NOKAUT_KEY = 'a8839b1180ea00fa1cf7c6b74ca01bb5'
+        NOKAUT_KEY_WORD = 'canon450d'
+        stream = mock.MagicMock()
+        mmock.return_value = stream
+        stream.read.return_value = EXAMPLE_RESPONSE
+        nokaut__api(NOKAUT_KEY, NOKAUT_KEY_WORD)
+        do_parsowania = mmock.call_args[0]
+        do_parsowania = urlparse.urlparse((str(do_parsowania))[2:-3])
+        query_parse = urlparse.parse_qs(do_parsowania.query)
+        self.assertEqual(query_parse['key'][0], NOKAUT_KEY)
+        self.assertEqual(query_parse['keyword'][0], NOKAUT_KEY_WORD)
+        self.assertEqual(query_parse['format'][0], 'rest')
+        self.assertEqual(query_parse['method'][0], 'nokaut.Product.getByKeyword')
+        self.assertEqual(do_parsowania.scheme, 'http')
+        self.assertEqual(do_parsowania.netloc, 'api.nokaut.pl')
+        self.assertEqual(do_parsowania.path, '/')
+
+
+if __name__ == "__main__":
+    unittest.main()
