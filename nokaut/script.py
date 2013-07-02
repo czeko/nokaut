@@ -1,4 +1,4 @@
-from lib import nokaut__api
+from lib import nokaut_api
 from lib import NokautError
 import sys
 import argparse
@@ -11,15 +11,13 @@ parser.add_option("-k",
 (options, args) = parser.parse_args()
 
 def main():
-    if 2 == len(args):
-        try:
-            price, url = nokaut__api(args[0],args[1])
-        except NokautError as e:
-            print e
-        except Exception as e:
-            print e
-        else:
-            return 'Price : %d, Url: %s' % (price, url)
+    try:
+        price, url = nokaut_api(args[0],args[1])
+    except NokautError as e:
+        print e
+    except Exception as e:
+        print e
     else:
-        return 'Nokaut takes exactly 2 arguments!'
+        return 'Price : %d, Url: %s' % (price, url)
+
 

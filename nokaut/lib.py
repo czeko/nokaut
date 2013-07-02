@@ -7,7 +7,7 @@ class NokautError(Exception):
     pass
 
 
-def nokaut__api(n_key, n_keyword):
+def nokaut_api(n_key, n_keyword):
     url = 'http://api.nokaut.pl/'
     query = urllib.urlencode(dict(
         format='rest',
@@ -16,15 +16,20 @@ def nokaut__api(n_key, n_keyword):
         keyword=n_keyword
     ))
     url = '?'.join([url, query])
-    f = urllib2.urlopen(url)
-    root = etree.fromstring(f.read())
-    if root.find('items') is None or root.find('total').text == '0':
-        raise NokautError('Brak produktu')
+    try:
+        f = urllib2.urlopen(url)
+    except (urllib2.HTTPError, urllib2.URLError) as e:
+        raise NokautError('No connection with nokaut.pl')
     else:
-        item = root.xpath('/rsp/items/item')[0]
-        price = item.find('price_min').text
-        price = price.replace(',', '.')
-        price = float(price)
-        url = item.find('url').text
-        return price, url
-
+        root = etree.fromstring(f.read())
+        if root.find('items') is None :
+            raise NokautError('Enter the correct key!!')
+        elif root.find('total').text == '0':
+            raise NokautError("Can't find the product!!")
+        else:
+            item = root.xpath('/rsp/items/item')[0]
+            price = item.find('price_min').text
+            price = price.replace(',', '.')
+            price = float(price)
+            url = item.find('url').text
+            return price, url

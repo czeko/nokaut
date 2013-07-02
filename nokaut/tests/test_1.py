@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 import mock
 import unittest
-from nokaut.lib import nokaut__api
+from nokaut.lib import nokaut_api
 from nokaut.script import main
 from nokaut.lib import NokautError
 from nokaut.lib import urllib2
@@ -175,7 +175,7 @@ class MyTest(unittest.TestCase):
         mmock.return_value = stream
         stream.read.return_value = EXAMPLE_RESPONSE
         self.assertEqual(
-            nokaut__api(
+            nokaut_api(
                 'A_KEY', 'A_NAME'
             ),
             (
@@ -184,8 +184,7 @@ class MyTest(unittest.TestCase):
             )
         )
 
-    def test_ilosc_arg(self):
-        self.assertEqual(main(), 'Nokaut takes exactly 2 arguments!')
+
 
     @mock.patch('nokaut.lib.urllib2.urlopen')
     def test_czy_nie_ma(self, mmock):
@@ -194,7 +193,7 @@ class MyTest(unittest.TestCase):
         stream.read.return_value = EXAMPLE_ERROR_RESPONSE
         self.assertRaises(
             NokautError,
-            nokaut__api,
+            nokaut_api,
             'A_KEY', 'A_NAME'
         )
 
@@ -205,7 +204,7 @@ class MyTest(unittest.TestCase):
         stream = mock.MagicMock()
         mmock.return_value = stream
         stream.read.return_value = EXAMPLE_RESPONSE
-        nokaut__api(NOKAUT_KEY, NOKAUT_KEY_WORD)
+        nokaut_api(NOKAUT_KEY, NOKAUT_KEY_WORD)
         do_parsowania = mmock.call_args[0]
         do_parsowania = urlparse.urlparse((str(do_parsowania))[2:-3])
         query_parse = urlparse.parse_qs(do_parsowania.query)
