@@ -160,41 +160,48 @@ EXAMPLE_RESPONSE = '''\
     <total>9</total>
 </rsp>'''
 
-
+EXAMPLE_ERROR_RESPONSE = '''\
+<rsp stat="ok">
+    <items>
+    </items>
+    <total>0</total>
+</rsp>
+'''
 class MyTest(unittest.TestCase):
 
     @mock.patch('nokaut.lib.urllib2.urlopen')
-    def test__czy__wyjscie(self, mmock):
+    def test_czy_wyjscie(self, mmock):
         stream = mock.MagicMock()
         mmock.return_value = stream
         stream.read.return_value = EXAMPLE_RESPONSE
         self.assertEqual(
             nokaut__api(
-                'a8839b1180ea00fa1cf7c6b74ca01bb5', 'canon450d'
+                'A_KEY', 'A_NAME'
             ),
             (
-                'Cena mini:',
-                '139,00',
-                'Znajdziesz tutaj: ',
+                139.00,
                 'http://www.nokaut.pl/futeraly-fotograficzne/easycover-na-aparat-canon-450-500d.html'
             )
         )
 
-    def test__ilosc__arg(self):
-        self.assertEqual(main(), 'Podaj 3 argumenty')
+    def test_ilosc_arg(self):
+        self.assertEqual(main(), 'Podaj 2 klucze')
 
-    def test__czy__nie__ma(self):
+    @mock.patch('nokaut.lib.urllib2.urlopen')
+    def test_czy_nie_ma(self, mmock):
+        stream = mock.MagicMock()
+        mmock.return_value = stream
+        stream.read.return_value = EXAMPLE_ERROR_RESPONSE
         self.assertRaises(
             PusteError,
             nokaut__api,
-            'a8839b1180ea00fa1cf7c6b74ca01bb5',
-            'mamamamamamama'
+            'A_KEY', 'A_NAME'
         )
 
     @mock.patch('nokaut.lib.urllib2.urlopen')
-    def test__czy__dobry__url(self, mmock):
-        NOKAUT_KEY = 'a8839b1180ea00fa1cf7c6b74ca01bb5'
-        NOKAUT_KEY_WORD = 'canon450d'
+    def test_czy_dobry_url(self, mmock):
+        NOKAUT_KEY = 'A_KEY'
+        NOKAUT_KEY_WORD = 'A_NAME'
         stream = mock.MagicMock()
         mmock.return_value = stream
         stream.read.return_value = EXAMPLE_RESPONSE

@@ -27,5 +27,7 @@ def nokaut__api(arg1, arg2):
         else:
             item = root.xpath('/rsp/items/item')[0]
             cena__minimalna = item.find('price_min').text
+            cena__minimalna = float('.'.join(cena__minimalna.split(',')))
             adres = item.find('url').text
-            return "Cena mini:", cena__minimalna, "Znajdziesz tutaj: ", adres
+            return cena__minimalna, adres
+
