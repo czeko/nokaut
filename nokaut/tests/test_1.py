@@ -3,7 +3,7 @@ import mock
 import unittest
 from nokaut.lib import nokaut__api
 from nokaut.script import main
-from nokaut.lib import PusteError
+from nokaut.lib import NokautError
 from nokaut.lib import urllib2
 import urlparse
 
@@ -185,7 +185,7 @@ class MyTest(unittest.TestCase):
         )
 
     def test_ilosc_arg(self):
-        self.assertEqual(main(), 'Podaj 2 klucze')
+        self.assertEqual(main(), 'Nokaut takes exactly 2 arguments!')
 
     @mock.patch('nokaut.lib.urllib2.urlopen')
     def test_czy_nie_ma(self, mmock):
@@ -193,7 +193,7 @@ class MyTest(unittest.TestCase):
         mmock.return_value = stream
         stream.read.return_value = EXAMPLE_ERROR_RESPONSE
         self.assertRaises(
-            PusteError,
+            NokautError,
             nokaut__api,
             'A_KEY', 'A_NAME'
         )

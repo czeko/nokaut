@@ -1,5 +1,5 @@
 from lib import nokaut__api
-from lib import PusteError
+from lib import NokautError
 import sys
 import argparse
 from optparse import OptionParser
@@ -13,11 +13,13 @@ parser.add_option("-k",
 def main():
     if 2 == len(args):
         try:
-            cena, url = nokaut__api(args[0],args[1])
-        except PusteError as e:
+            price, url = nokaut__api(args[0],args[1])
+        except NokautError as e:
+            print e
+        except Exception as e:
             print e
         else:
-            return 'Cena: %d, Url: %s' % (cena, url)
+            return 'Price : %d, Url: %s' % (price, url)
     else:
-        return 'Podaj 2 klucze'
+        return 'Nokaut takes exactly 2 arguments!'
 

@@ -3,31 +3,28 @@ import urllib2
 from lxml import etree
 
 
-class PusteError(Exception):
+class NokautError(Exception):
     pass
 
 
-def nokaut__api(arg1, arg2):
+def nokaut__api(n_key, n_keyword):
     url = 'http://api.nokaut.pl/'
     query = urllib.urlencode(dict(
         format='rest',
-        key=arg1,
+        key=n_key,
         method='nokaut.Product.getByKeyword',
-        keyword=arg2
+        keyword=n_keyword
     ))
     url = '?'.join([url, query])
-    try:
-        f = urllib2.urlopen(url)
-    except urllib2.URLError, err:
-        return 'Sprawdz czy z internetem wszystko ok!', err.reason
+    f = urllib2.urlopen(url)
+    root = etree.fromstring(f.read())
+    if root.find('items') is None or root.find('total').text == '0':
+        raise NokautError('Brak produktu')
     else:
-        root = etree.fromstring(f.read())
-        if root.find('items') is None or root.find('total').text == '0':
-            raise PusteError('Brak produktu')
-        else:
-            item = root.xpath('/rsp/items/item')[0]
-            cena__minimalna = item.find('price_min').text
-            cena__minimalna = float('.'.join(cena__minimalna.split(',')))
-            adres = item.find('url').text
-            return cena__minimalna, adres
+        item = root.xpath('/rsp/items/item')[0]
+        price = item.find('price_min').text
+        price = price.replace(',', '.')
+        price = float(price)
+        url = item.find('url').text
+        return price, url
 
