@@ -25,7 +25,7 @@ def nokaut_api(n_key, n_keyword):
         if root.find('items') is None :
             raise NokautError('Enter the correct key!!')
         elif root.find('total').text == '0':
-            raise NokautError("Can't find the product!!")
+            raise NokautError("No result!!")
         else:
             item = root.xpath('/rsp/items/item')[0]
             price = item.find('price_min').text

@@ -12,7 +12,7 @@ parser.add_option("-k",
 
 def main():
     try:
-        price, url = nokaut_api(args[0],args[1])
+        price, url = nokaut_api(args[0],args[1:])
     except IndexError:
         print 'Nokaut takes exactly 2 argument!'
     except NokautError as e:
