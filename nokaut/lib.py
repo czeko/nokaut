@@ -28,8 +28,9 @@ def nokaut_api(n_key, n_keyword):
             raise NokautError("No result!!")
         else:
             item = root.xpath('/rsp/items/item')[0]
+            img_url = item.find('image_large').text
             price = item.find('price_min').text
             price = price.replace(',', '.')
             price = float(price)
             url = item.find('url').text
-            return price, url
+            return price, url, img_url

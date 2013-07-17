@@ -180,7 +180,8 @@ class MyTest(unittest.TestCase):
             ),
             (
                 139.00,
-                'http://www.nokaut.pl/futeraly-fotograficzne/easycover-na-aparat-canon-450-500d.html'
+                'http://www.nokaut.pl/futeraly-fotograficzne/easycover-na-aparat-canon-450-500d.html',
+                'http://nokautimg4.pl/p-cb-eb-cbeba28bb6ba027093e79d196c51b09d500x500/easycover-na-aparat-canon-450-500d.jpg'
             )
         )
 
