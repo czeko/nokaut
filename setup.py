@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='nokaut',
-    version='0.1.1',
+    version='1',
     author='Malwina Nowakowska',
     author_email='malwina.nowakowska@stxnext.pl',
     packages=find_packages(),
